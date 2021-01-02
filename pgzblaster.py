@@ -1,9 +1,10 @@
-from random import choice, uniform, randint
-from enum import Enum
-
-import pygame, pgzrun
+import pygame
+import pgzrun
 import sys
+
+from enum import Enum
 from pgzblasterutils import clip, sin_osc, tri_osc, decide, rand_color, clip_rgb
+from random import choice, uniform, randint
 
 WIDTH, HEIGHT = 500, 700
 WH, HH = WIDTH/2, HEIGHT/2
