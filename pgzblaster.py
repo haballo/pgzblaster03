@@ -4,8 +4,7 @@ import pygame, pgzrun
 from pgzblasterutils import clip, sin_osc, tri_osc, decide, rand_color, clip_rgb
 
 WIDTH, HEIGHT = 500, 700
-W, H = WIDTH, HEIGHT
-WH, HH = W/2, H/2
+WH, HH = WIDTH/2, HEIGHT/2
 
 # 1 => 60 fps | 2 => 30 fps | 3 => 20 fps...
 FRAME_RATE_DIVISOR = 1
@@ -50,7 +49,7 @@ class Ship(Actor):
         self.launch_time = 0.15
 
     def init_position(self):
-        self.bottom = H-50
+        self.bottom = HEIGHT - 50
         self.centerx = WH
 
     def reset_power_ups(self):
@@ -79,7 +78,7 @@ class Ship(Actor):
         self.x += self.x_vel
         self.y += self.y_vel
         
-        self.clamp_ip(0, 0, W, H-50)
+        self.clamp_ip(0, 0, WIDTH, HEIGHT - 50)
 
     def draw(self):
         if self.shield:
@@ -114,7 +113,7 @@ class Ship(Actor):
             self.reset_power_ups()
         else:
             game.state = State.GAME_OVER
-            sounds.game_over.play
+            sounds.game_over.play()
             clock.schedule(game.get_ready, 4)
             
     def power_up(self, power_up_obj):
@@ -228,7 +227,7 @@ class UFO(Actor):
         self.y_linear += self.y_vel
         self.y = self.y_linear + y_osc
 
-        if self.top > H:
+        if self.top > HEIGHT:
             self.alive = False
 
         if decide(self.bomb_rate) and self.top > 0:
@@ -279,7 +278,7 @@ class Bomb(Actor):
         self.drive = drive
 
     def update(self):
-        dist_to_ship = (game.ship.x - self.x) / W
+        dist_to_ship = (game.ship.x - self.x) / WIDTH
         self.x_vel += dist_to_ship * self.drive
 
         self.x += self.x_vel
@@ -311,7 +310,7 @@ class UFOMother():
         self.shield_prob = 0
 
     def new_squadron(self):
-        result = [UFO(self, (i*-40)-H/4, i*self.osc_delay)
+        result = [UFO(self, (i*-40)-HEIGHT/4, i*self.osc_delay)
                   for i in range(0, self.n_ufos)]
         self.raise_difficulty()
         return result
@@ -346,7 +345,7 @@ class PowerUp(Actor):
         self.y += self.y_vel
         self.y_vel += 0.03
         
-        if self.top > H:
+        if self.top > HEIGHT:
             self.alive = False
 
         if self.colliderect(game.ship):
@@ -382,8 +381,8 @@ class Star():
     parallaxe = 0.05
     
     def __init__(self):
-        self.x = randint(0, W)
-        self.y = randint(0, H)
+        self.x = randint(0, WIDTH)
+        self.y = randint(0, HEIGHT)
         self.radius = uniform(0, 4)
         self.blink_freq = uniform(0.2, 1)
 
@@ -391,14 +390,14 @@ class Star():
         self.x -= game.ship.x_vel * self.radius * Star.parallaxe
         self.y -= game.ship.y_vel * self.radius * Star.parallaxe - 0.25
         
-        if self.x > W:
+        if self.x > WIDTH:
             self.x = 0
         if self.x < 0:
-            self.x = W
-        if self.y > H:
+            self.x = WIDTH
+        if self.y > HEIGHT:
             self.y = 0
         if self.y < 0:
-            self.y = H
+            self.y = HEIGHT
             
     def draw(self):
         r, g, b = game.colors.star_color()
@@ -536,7 +535,7 @@ class Game:
 def center_message(text):
     screen.draw.text(text,
                     center=(WH, HH),
-                    color= "grey",
+                    color="grey",
                     fontsize=40)
 
 
@@ -573,7 +572,7 @@ def draw():
         star.draw()
         
     for effect in game.effects:
-            effect.draw()
+        effect.draw()
 
     if game.state == State.READY:
         center_message("PRESS ANY KEY TO START")
@@ -591,12 +590,12 @@ def draw():
 
     if game.state != State.READY:
         screen.draw.text("Ships: "+str(game.ship.lifes),
-                         (20, H-30),
-                         color= "grey")
+                         (20, HEIGHT-30),
+                         color="grey")
 
         screen.draw.text("Score: "+str(game.ship.score),
-                         (W-120, H-30),
-                         color= "grey")
+                         (WIDTH-120, HEIGHT-30),
+                         color="grey")
         
 
 pygame.mixer.quit()
