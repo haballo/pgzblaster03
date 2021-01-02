@@ -1,6 +1,8 @@
 from random import choice, uniform, randint
 from enum import Enum
+
 import pygame, pgzrun
+import sys
 from pgzblasterutils import clip, sin_osc, tri_osc, decide, rand_color, clip_rgb
 
 WIDTH, HEIGHT = 500, 700
@@ -549,6 +551,9 @@ def on_key_down():
 
     if keyboard.space and game.state == State.PLAY:
         game.ship.launch_rocket()
+
+    if keyboard.escape:
+        sys.exit()
 
 
 def update():
